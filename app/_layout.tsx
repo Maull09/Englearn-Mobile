@@ -1,14 +1,12 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
+import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import * as SplashScreen from 'expo-splash-screen';
 
-import "@/app/global.css";
-
+import '../global.css';
 import { useColorScheme } from '@/hooks/useColorScheme';
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -30,7 +28,14 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {
+          backgroundColor: "#f3f4f6", // Sama dengan kelas Tailwind `bg-gray-100`
+        },
+      }}
+    >
       <Stack.Screen name="(landing)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
