@@ -10,7 +10,6 @@ type UnitProps = {
   description: string;
   lessons: {
     id: number;
-    completed: boolean;
     challenges: { id: number }[];
   }[];
   userChallengeProgress: { challengeId: number; completed: boolean }[];
@@ -33,7 +32,7 @@ const Unit: React.FC<UnitProps> = ({
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
       showsVerticalScrollIndicator={false}
-      className="flex-1 bg-gray-100"
+      className="flex-1 bg-white"
     >
       {/* Unit Banner */}
       <UnitBanner title={title} description={description} />

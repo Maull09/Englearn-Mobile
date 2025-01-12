@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView, ActivityIndicator, Alert } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { FeedWrapper } from "@/components/FeedWrapper";
 import { Header } from "./header";
 import Unit from "./unit";
-import {
-  getUnits,
-  getUserProfile,
-  getUserChallengeProgress,
-} from "@/db/queries";
+import { getUnits } from "@/db/data"; // Import units dari data.ts
 
 interface UserProfile {
   userName: string;
@@ -20,90 +16,33 @@ interface UserProfile {
 }
 
 const LearnPage = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  interface Lesson {
-    completed: boolean;
-    id: number;
-    title: string;
-    order: number;
-    unitId: number;
-    lessonType: "QUIZ" | "VIDEO";
-    videoUrl: string | null;
-    challenges: {
-      id: number;
-      order: number;
-      lessonId: number;
-      question: string;
-      challengeProgress: {
-        id: number;
-        completed: boolean;
-        challengeId: number;
-      }[];
-    }[];
-  }
-  
-  interface Unit {
-    id: number;
-    title: string;
-    description: string;
-    order: number;
-    lessons: Lesson[];
-  }
-  
-  const [units, setUnits] = useState<Unit[]>([]);
-  interface ChallengeProgress {
-    id: number;
-    challengeId: number;
-    userId: string;
-    completed: boolean;
-  }
-  
-  const [userChallengeProgress, setUserChallengeProgress] = useState<ChallengeProgress[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>({
+    userName: "John Doe",
+    profileImageSrc: null,
+    userId: "1",
+    email: "johndoe@example.com",
+    password: "password123",
+    activeUnitId: 1,
+  });
 
+  const dummyChallengeProgress = [
+    { id: 1, challengeId: 1, userId: "1", completed: false },
+  ];
+
+  const [userChallengeProgress, setUserChallengeProgress] = useState(dummyChallengeProgress);
   const router = useRouter();
+  const units = getUnits();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch user profile, units, and challenge progress
-        const [profile, fetchedUnits, fetchedProgress] = await Promise.all([
-          getUserProfile(),
-          getUnits(),
-          getUserChallengeProgress(),
-        ]);
-
-        if (!profile) {
-        //   Alert.alert(
-        //     "User Profile Not Found",
-        //     "Please set up your profile to continue."
-        //   );
-        //   router.push("/"); // Redirect to landing page
-          return;
-        }
-
-        console.log("Fetched data:", profile, fetchedUnits, fetchedProgress);
-        setUserProfile(profile);
-        setUnits(fetchedUnits);
-        setUserChallengeProgress(fetchedProgress ?? []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        Alert.alert("Error", "Failed to fetch data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [router]);
-
-//   if (loading) {
-//     return (
-//       <View className="flex-1 items-center justify-center bg-white">
-//         <ActivityIndicator size="large" color="#0000ff" />
-//       </View>
-//     );
-//   }
+    // Jika userProfile tidak ada, alihkan ke halaman landing
+    if (!userProfile) {
+      Alert.alert(
+        "User Profile Not Found",
+        "Please set up your profile to continue."
+      );
+      router.push("/"); // Redirect ke halaman landing
+    }
+  }, [userProfile, router]);
 
   return (
     <ScrollView

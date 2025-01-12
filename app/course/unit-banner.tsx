@@ -20,14 +20,14 @@ const UnitBanner: React.FC<UnitBannerProps> = ({ title, description }) => {
       </View>
 
       {/* Button */}
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => router.push("/lesson")} // Adjust the route as necessary
         activeOpacity={0.8}
         className="flex-row items-center justify-center bg-white px-4 py-2 rounded-lg border-2 border-blue-700"
       >
         <NotebookText className="mr-2 text-blue-500" size={20} />
         <Text className="text-blue-500 font-bold text-lg">Continue</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

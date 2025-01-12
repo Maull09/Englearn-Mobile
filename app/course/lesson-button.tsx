@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Check, Crown, Star } from "lucide-react-native";
-import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 
 interface LessonButtonProps {
@@ -21,7 +20,7 @@ const LessonButton: React.FC<LessonButtonProps> = ({
   current = false,
   completed = false,
 }) => {
-  const navigation = useNavigation();
+  const router = useRouter();
 
   const cycleLength = 8;
   const cycleIndex = index % cycleLength;
@@ -38,14 +37,13 @@ const LessonButton: React.FC<LessonButtonProps> = ({
   const isFirst = index === 0;
   const isLast = index === totalCount;
   const isCompleted = completed;
-  
-  const Icon = isCompleted ? Check : isLast ? Crown : Star;
 
-  const router = useRouter();
+  const Icon = isCompleted ? Check : isLast ? Crown : Star;
 
   const handlePress = () => {
     if (!locked) {
-        router.push(`/lesson/${id}`);}
+      router.push(`/lesson/${id}`);
+    }
   };
 
   return (
@@ -64,39 +62,39 @@ const LessonButton: React.FC<LessonButtonProps> = ({
       >
         {current ? (
           <View className="relative h-[102px] w-[102px]">
-            <View className="absolute -top-6 left-2.5 z-10 animate-bounce rounded-xl border-2 bg-white px-3 py-2.5 font-bold uppercase tracking-wide text-blue-500">
+            {/* Start Label */}
+            <View className="absolute -top-6 left-2.5 z-10 animate-bounce rounded-xl border-2 border-gray-200 bg-white px-3 py-2.5 font-bold uppercase tracking-wide text-blue-500">
               <Text>Start</Text>
               <View
-                className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 transform border-x-8 border-t-8 border-x-transparent"
+                className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 transform border-x-8 border-t-8 border-blue-500 border-x-transparent"
                 aria-hidden
               />
             </View>
+
+            {/* Current Lesson Icon */}
             <TouchableOpacity
-              className={`h-[70px] w-[70px] rounded-full border-b-8 justify-center items-center ${
-                locked ? "bg-neutral-400" : "bg-primary"
+              className={`h-[70px] w-[70px] rounded-full border-b-8 border-blue-500 justify-center items-center ${
+                locked ? "bg-neutral-400" : "bg-blue-500"
               }`}
             >
               <Icon
-                className={`h-10 w-10 ${
-                  locked
-                    ? "fill-neutral-400 stroke-neutral-400 text-neutral-400"
-                    : "fill-primary-foreground text-primary-foreground"
-                } ${isCompleted ? "fill-none stroke-[4]" : ""}`}
+                size={40}
+                color={locked ? "#A0A0A0" : "#FFFFFF"} // Warna ikon
+                strokeWidth={isCompleted ? 4 : 2} // Tebal ikon
               />
             </TouchableOpacity>
           </View>
         ) : (
+          // Default Lesson Icon
           <TouchableOpacity
-            className={`h-[70px] w-[70px] rounded-full border-b-8 justify-center items-center ${
-              locked ? "bg-neutral-400" : "bg-primary"
+            className={`h-[70px] w-[70px] rounded-full border-b-8 border-blue-500 justify-center items-center ${
+              locked ? "bg-neutral-400" : "bg-blue-500"
             }`}
           >
             <Icon
-              className={`h-10 w-10 ${
-                locked
-                  ? "fill-neutral-400 stroke-neutral-400 text-neutral-400"
-                  : "fill-primary-foreground text-primary-foreground"
-              } ${isCompleted ? "fill-none stroke-[4]" : ""}`}
+              size={40}
+              color={locked ? "#A0A0A0" : "#FFFFFF"} // Warna ikon
+              strokeWidth={isCompleted ? 4 : 2}
             />
           </TouchableOpacity>
         )}
