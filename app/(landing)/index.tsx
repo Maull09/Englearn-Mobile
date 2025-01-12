@@ -5,14 +5,14 @@ export default function LandingPage() {
   return (
     <ScrollView
       className="flex-1"
-      contentContainerStyle={{ alignItems: 'center', paddingBottom: 20 }}
+      contentContainerStyle={{ alignItems: 'center' }}
       showsVerticalScrollIndicator={false}
     >
       {/* Section 1 */}
-      <View className="items-center mt-6 mb-12 md:mb-36 w-full max-w-md">
+      <View className="items-center -mb-96 mt-4 md:mt-0 md:mb-48 w-full max-w-md">
         <Image
           source={require('../../assets/images/undraw_Educator_re_ju47.png')}
-          className="w-3/5 md:w-4/5 max-h-40 md:max-h-48 mb-4"
+          className="w-3/5 md:w-4/5 max-h-32 md:max-h-40 mb-2"
           resizeMode="contain"
         />
         <Text className="text-base md:text-lg font-bold text-blue-500 text-center mb-2">
@@ -30,10 +30,10 @@ export default function LandingPage() {
       </View>
 
       {/* Section 2 */}
-      <View className="items-center mb-12 md:mb-36 w-full max-w-md">
+      <View className="items-center -mt-36 md:mt-0 -mb-96 md:mb-48 w-full max-w-md">
         <Image
           source={require('../../assets/images/undraw_Mobile_interface_re_1vv9.png')}
-          className="w-3/5 md:w-4/5 max-h-40 md:max-h-48 mb-4"
+          className="w-3/5 md:w-4/5 max-h-32 md:max-h-40 mb-2"
           resizeMode="contain"
         />
         <Text className="text-base md:text-lg font-bold text-blue-500 text-center mb-2">
@@ -45,10 +45,10 @@ export default function LandingPage() {
       </View>
 
       {/* Section 3 */}
-      <View className="items-center mb-12 md:mb-8 w-full max-w-md">
+      <View className="items-center -mt-36 md:mt-0 -mb-96 md:mb-8 w-full max-w-md">
         <Image
           source={require('../../assets/images/undraw_Social_interaction_re_dyjh.png')}
-          className="w-3/5 md:w-4/5 max-h-40 md:max-h-48 mb-4"
+          className="w-3/5 md:w-4/5 max-h-32 md:max-h-40 mb-2"
           resizeMode="contain"
         />
         <Text className="text-base md:text-lg font-bold text-blue-500 text-center mb-2">
@@ -59,6 +59,11 @@ export default function LandingPage() {
           membaca, menulis, mendengarkan, dan berbicara dalam Bahasa Inggris!
         </Text>
       </View>
+
+      {/* Section 4 */}
+      <View className="items-center mt-8 md:mt-0 -mb-96 md:mb-16 w-full max-w-md">
+      </View>
     </ScrollView>
+
   );
 }
