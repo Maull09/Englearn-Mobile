@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView, View, Text, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, Image } from 'react-native';
+import { Link } from 'expo-router';
 
 export default function LandingPage() {
   return (
@@ -21,12 +22,12 @@ export default function LandingPage() {
         <Text className="text-sm md:text-base text-gray-600 text-center mb-4 px-4">
           Belajar dengan cara yang dirancang untuk meningkatkan kemampuanmu secara signifikan!
         </Text>
-        <TouchableOpacity className="bg-blue-500 py-3 px-8 md:px-10 rounded-lg mb-2">
+        <Link href="/auth/signup" className="bg-blue-500 py-3 px-8 md:px-10 rounded-lg mb-2">
           <Text className="text-white font-bold text-sm md:text-base">DAFTAR SEKARANG</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
+        </Link>
+        <Link href="/auth/signin">
           <Text className="text-blue-500 font-semibold text-sm md:text-base">SAYA SUDAH PUNYA AKUN</Text>
-        </TouchableOpacity>
+        </Link>
       </View>
 
       {/* Section 2 */}
@@ -63,7 +64,7 @@ export default function LandingPage() {
       {/* Section 4 */}
       <View className="items-center mt-8 md:mt-0 -mb-96 md:mb-16 w-full max-w-md">
       </View>
-    </ScrollView>
 
+    </ScrollView>
   );
 }
