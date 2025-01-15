@@ -1,41 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { eq } from "drizzle-orm";
-import db from "@/db/drizzle";
-import { userProfile } from "@/db/schema";
 
 // Universal alert function
-export interface AlertFunction {
-    (title: string, message: string): void;
-}
-
-const showAlert: AlertFunction = (title, message) => {
-    if (Platform.OS === "web") {
-        // Use window.alert for web
-        window.alert(`${title}: ${message}`);
-    } else {
-        // Use Alert for mobile
-        Alert.alert(title, message);
-    }
+const showAlert = (title: string, message: string): void => {
+  if (Platform.OS === "web") {
+    window.alert(`${title}: ${message}`);
+  } else {
+    Alert.alert(title, message);
+  }
 };
 
-export interface ValidateEmailFunction {
-    (email: string): boolean;
-}
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const getCookie = (name: string): string | null => {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+};
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setPasswordVisible] = useState(false);
 
-  const router = useRouter(); // Navigation
+  const router = useRouter();
 
-const validateEmail: ValidateEmailFunction = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-};
+  const checkIfLoggedIn = async () => {
+    try {
+      const userCookie = (await AsyncStorage.getItem("userData")) || getCookie("userData");      
+
+      if (Platform.OS === "web") {
+        // Check for cookies
+        if (userCookie) {
+          showAlert("Info", "Anda sudah login.");
+          router.push("../course"); // Redirect to the course page
+        }
+      } else {
+        // Check AsyncStorage for mobile
+        const userData = await AsyncStorage.getItem("userData");
+        if (userData) {
+          showAlert("Info", "Anda sudah login.");
+          router.push("../course"); // Redirect to the course page
+        }
+      }
+    } catch (error) {
+      console.error("Error checking login status:", error);
+    }
+  };
+
+  useEffect(() => {
+    checkIfLoggedIn();
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -49,67 +68,62 @@ const validateEmail: ValidateEmailFunction = (email) => {
     }
 
     try {
-      // Query user by email
-      const user = await db.query.userProfile.findFirst({
-        where: eq(userProfile.email, email),
+      // Send login request
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: Platform.OS === "web" ? "include" : "omit", // Use cookies for web
       });
 
-      if (user) {
-        // Validate password
-        if (user.password === password) {
-          // Store user data in AsyncStorage
-          await AsyncStorage.setItem(
-            "userData",
-            JSON.stringify({
-              userId: user.userId,
-              userName: user.userName,
-              email: user.email,
-            })
-          );
+      const data = await response.json();
 
-          showAlert("Login Berhasil", `Selamat datang, ${user.userName}!`);
-          router.push("../course"); // Navigate to the main page
-        } else {
-          showAlert("Login Gagal", "Password Anda salah. Silakan coba lagi.");
-        }
+      if (!response.ok) {
+        showAlert("Login Gagal", data.message || "Login failed");
+        return;
+      }
+
+      // Handle session storage for mobile or cookies for web
+      if (Platform.OS === "web") {
+        // Cookies are handled automatically on the web
+        showAlert("Login Berhasil", `Selamat datang, ${data.user?.userName || "User"}!`);
+        router.push("../course");
       } else {
-        showAlert("Login Gagal", "Pengguna tidak ditemukan.");
+        // Store user data in AsyncStorage for mobile
+        await AsyncStorage.setItem("userData", JSON.stringify(data.user));
+        showAlert("Login Berhasil", `Selamat datang, ${data.user?.userName || "User"}!`);
+        router.push("../course");
       }
     } catch (error) {
+      console.error("Login error:", error);
       showAlert("Error", "Terjadi kesalahan saat memproses login.");
-      console.error(error);
     }
   };
 
   return (
     <View className="flex-1 items-center justify-center bg-white px-4">
-      {/* Container */}
       <View className="w-full max-w-md bg-white rounded-lg shadow-md overflow-hidden">
-        {/* Header */}
         <View className="bg-blue-500 px-6 py-8">
           <Text className="text-white text-xl font-bold">
             Ayo, login untuk melanjutkan perjalanan Anda bersama EngLearn.
           </Text>
         </View>
 
-        {/* Form */}
         <View className="p-6 space-y-4">
-          {/* Email Input */}
-          <View className="mb-4 md:mb-0">
+          <View className="mb-4">
             <Text className="text-gray-700 font-medium">Email</Text>
             <TextInput
               value={email}
               onChangeText={setEmail}
               placeholder="Masukkan email Anda"
               className="border border-gray-300 rounded-full px-4 py-3 mt-2 text-gray-700"
-              style={{
-                backgroundColor: "transparent",
-              }}
+              style={{ backgroundColor: "transparent" }}
             />
           </View>
 
-          {/* Password Input */}
-          <View className="mb-8 md:mb-0">
+          <View className="mb-8">
             <Text className="text-gray-700 font-medium">Password</Text>
             <View className="relative">
               <TextInput
@@ -118,9 +132,7 @@ const validateEmail: ValidateEmailFunction = (email) => {
                 placeholder="Masukkan password Anda"
                 secureTextEntry={!isPasswordVisible}
                 className="border border-gray-300 rounded-full px-4 py-3 mt-2 text-gray-700"
-                style={{
-                  backgroundColor: "transparent",
-                }}
+                style={{ backgroundColor: "transparent" }}
               />
               <TouchableOpacity
                 onPress={() => setPasswordVisible(!isPasswordVisible)}
@@ -133,7 +145,6 @@ const validateEmail: ValidateEmailFunction = (email) => {
             </View>
           </View>
 
-          {/* Login Button */}
           <TouchableOpacity
             onPress={handleLogin}
             className="bg-blue-500 py-3 rounded-full shadow-sm"
@@ -141,9 +152,8 @@ const validateEmail: ValidateEmailFunction = (email) => {
             <Text className="text-white text-center font-bold text-lg">Masuk</Text>
           </TouchableOpacity>
 
-          {/* Back to Landing Page Button */}
           <TouchableOpacity
-            onPress={() => router.push("/")} // Navigate to Landing Page
+            onPress={() => router.push("/")}
             className="mt-4 py-3 rounded-full border border-blue-500"
           >
             <Text className="text-blue-500 text-center font-bold text-lg">

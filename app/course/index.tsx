@@ -1,57 +1,142 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView, Alert } from "react-native";
+import { View, ScrollView, Alert, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { FeedWrapper } from "@/components/FeedWrapper";
 import { Header } from "./header";
 import Unit from "./unit";
-import { getUnits } from "@/db/data"; // Import units dari data.ts
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface UserProfile {
   userName: string;
   profileImageSrc: string | null;
   userId: string;
   email: string;
-  password: string;
   activeUnitId: number | null;
 }
 
+interface ChallengeProgress {
+  id: number;
+  challengeId: number;
+  userId: string;
+  completed: boolean;
+}
+
+interface UnitData {
+  id: number;
+  order: number;
+  description: string;
+  title: string;
+  lessons: {
+    id: number;
+    title: string;
+    challenges: { id: number }[];
+  }[];
+}
+
+const getCookie = (name: string): string | null => {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+};
+
 const LearnPage = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>({
-    userName: "John Doe",
-    profileImageSrc: null,
-    userId: "1",
-    email: "johndoe@example.com",
-    password: "password123",
-    activeUnitId: 1,
-  });
-
-  const dummyChallengeProgress = [
-    { id: 1, challengeId: 1, userId: "1", completed: false },
-  ];
-
-  const [userChallengeProgress, setUserChallengeProgress] = useState(dummyChallengeProgress);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userChallengeProgress, setUserChallengeProgress] = useState<
+    ChallengeProgress[]
+  >([]);
+  const [units, setUnits] = useState<UnitData[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const units = getUnits();
 
+  // Fetch data only once
   useEffect(() => {
-    // Jika userProfile tidak ada, alihkan ke halaman landing
-    if (!userProfile) {
-      Alert.alert(
-        "User Profile Not Found",
-        "Please set up your profile to continue."
-      );
-      router.push("/"); // Redirect ke halaman landing
-    }
-  }, [userProfile, router]);
+    const fetchData = async () => {
+      try {
+        const userDataString =
+          (await AsyncStorage.getItem("userData")) || getCookie("userData");
+        const userData = userDataString ? JSON.parse(userDataString) : null;
+        const userId = userData?.userId;
+        console.log("userId", userId);
+
+        if (!userId) {
+          throw new Error("User is not logged in");
+        }
+
+        const profileResponse = await fetch(
+          `http://localhost:3000/api/auth/profile/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!profileResponse.ok) {
+          throw new Error("Failed to fetch user profile");
+        }
+        const profileData = await profileResponse.json();
+        setUserProfile(profileData);
+
+        const unitsResponse = await fetch("http://localhost:3000/api/units", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": userId,
+          },
+        });
+
+        if (!unitsResponse.ok) {
+          throw new Error("Failed to fetch units");
+        }
+        const unitsData = await unitsResponse.json();
+        setUnits(unitsData);
+
+        const progressResponse = await fetch(
+          `http://localhost:3000/api/progress/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!progressResponse.ok) {
+          throw new Error("Failed to fetch user challenge progress");
+        }
+        const progressData = await progressResponse.json();
+        setUserChallengeProgress(progressData);
+      } catch (error) {
+        console.error(error);
+        Alert.alert("Error", "Failed to load data. Please log in and try again.");
+        router.push("/auth/signin");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (!userProfile) {
+    Alert.alert("User Profile Not Found", "Please set up your profile to continue.");
+    router.push("/"); // Redirect to landing page
+  }
 
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
       className="flex-1 bg-white px-4"
     >
-      {/* Feed Wrapper */}
       <FeedWrapper>
-        {/* Header */}
         {userProfile && (
           <Header
             title="English Course"
@@ -59,8 +144,6 @@ const LearnPage = () => {
             profileImageSrc={userProfile.profileImageSrc ?? "/book_5221784.png"}
           />
         )}
-
-        {/* Units */}
         {units.map((unit) => (
           <View key={unit.id} className="mb-10">
             <Unit

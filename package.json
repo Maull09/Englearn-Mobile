@@ -3,13 +3,15 @@
   "main": "expo-router/entry",
   "version": "1.0.1",
   "scripts": {
-    "start": "expo start",
+    "start": "concurrently \"expo start\" \"npm run server\"",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "server": "ts-node ./routes/index.ts",
+    "dev-server": "nodemon ./routes/index.ts"
   },
   "jest": {
     "preset": "jest-expo"
@@ -23,6 +25,8 @@
     "@react-navigation/native": "^7.0.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.3",
     "expo": "~52.0.20",
@@ -57,9 +61,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.10.6",
     "@types/react": "~18.3.12",
     "@types/react-native": "^0.72.8",
     "@types/react-test-renderer": "^18.3.0",

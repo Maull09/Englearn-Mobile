@@ -58,7 +58,9 @@
       },
       "eas": {
         "projectId": "fa8472e1-00a2-49ee-8574-e8cfad1dc838"
-      }
+      },
+      "EXPO_PUBLIC_DATABASE_URL":"postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+
     }
   }
 }
