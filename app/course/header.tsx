@@ -28,7 +28,7 @@ export const Header = ({ title, userName, profileImageSrc }: HeaderProps) => {
         <Image
           source={
             profileImageSrc
-              ? { uri: profileImageSrc }
+              ? require("../../assets/images/book_5221784.png")
               : require("../../assets/images/book_5221784.png") // Default profile image
           }
           style={{ width: 32, height: 32, borderRadius: 16, borderWidth: 1 }}

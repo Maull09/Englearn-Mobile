@@ -10,11 +10,7 @@ import {
 } from "react-native";
 import { Link, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const getCookie = (name: string): string | null => {
-  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-  return match ? decodeURIComponent(match[2]) : null;
-};
+import { showAlert, getCookie } from "@/utils/util";
 
 export default function LandingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -60,7 +56,7 @@ export default function LandingPage() {
     if (isLoggedIn) {
       router.push("/course"); // Redirect ke halaman course jika sudah login
     } else {
-      Alert.alert("Error", "Anda belum login.");
+      showAlert("Error", "Anda belum login.");
     }
   };
 

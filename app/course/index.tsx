@@ -5,6 +5,8 @@ import { FeedWrapper } from "@/components/FeedWrapper";
 import { Header } from "./header";
 import Unit from "./unit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { showAlert, getCookie } from "@/utils/util";
+
 
 interface UserProfile {
   userName: string;
@@ -32,11 +34,6 @@ interface UnitData {
     challenges: { id: number }[];
   }[];
 }
-
-const getCookie = (name: string): string | null => {
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  return match ? decodeURIComponent(match[2]) : null;
-};
 
 const LearnPage = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -108,7 +105,7 @@ const LearnPage = () => {
         setUserChallengeProgress(progressData);
       } catch (error) {
         console.error(error);
-        Alert.alert("Error", "Failed to load data. Please log in and try again.");
+        showAlert("Error", "Failed to load data. Please log in and try again.");
         router.push("/auth/signin");
       } finally {
         setLoading(false);
@@ -127,7 +124,7 @@ const LearnPage = () => {
   }
 
   if (!userProfile) {
-    Alert.alert("User Profile Not Found", "Please set up your profile to continue.");
+    showAlert("User Profile Not Found", "Please set up your profile to continue.");
     router.push("/"); // Redirect to landing page
   }
 

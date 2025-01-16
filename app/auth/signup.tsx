@@ -2,28 +2,8 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { showAlert, getCookie, validateEmail } from "@/utils/util";
 
-// Universal alert function
-const showAlert = (title: string, message: string): void => {
-  if (Platform.OS === "web") {
-    window.alert(`${title}: ${message}`);
-  } else {
-    Alert.alert(title, message);
-  }
-};
-
-// Cek login dari cookie
-const getCookie = (name: string): string | null => {
-  if (Platform.OS !== "web") return null;
-  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-  return match ? decodeURIComponent(match[2]) : null;
-};
-
-// Validasi email
-const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
 
 const SignUpScreen = () => {
   const [name, setName] = useState("");

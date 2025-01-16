@@ -42,7 +42,7 @@ const LessonButton: React.FC<LessonButtonProps> = ({
 
   const handlePress = () => {
     if (!locked) {
-      router.push(`/lesson/${id}`);
+      router.push(`/lesson/${id}`); // Navigasi ke halaman pelajaran berdasarkan ID
     }
   };
 
@@ -51,6 +51,7 @@ const LessonButton: React.FC<LessonButtonProps> = ({
       onPress={handlePress}
       disabled={locked}
       activeOpacity={locked ? 1 : 0.7}
+      className="relative items-center"
       style={{ pointerEvents: locked ? "none" : "auto" }}
     >
       <View
@@ -73,6 +74,7 @@ const LessonButton: React.FC<LessonButtonProps> = ({
 
             {/* Current Lesson Icon */}
             <TouchableOpacity
+              onPress={handlePress}
               className={`h-[70px] w-[70px] rounded-full border-b-8 border-blue-500 justify-center items-center ${
                 locked ? "bg-neutral-400" : "bg-blue-500"
               }`}
@@ -87,6 +89,7 @@ const LessonButton: React.FC<LessonButtonProps> = ({
         ) : (
           // Default Lesson Icon
           <TouchableOpacity
+            onPress={handlePress}
             className={`h-[70px] w-[70px] rounded-full border-b-8 border-blue-500 justify-center items-center ${
               locked ? "bg-neutral-400" : "bg-blue-500"
             }`}
