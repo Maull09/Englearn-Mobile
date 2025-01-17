@@ -152,6 +152,14 @@ const LearnPage = () => {
     return null;
   }
 
+  if (units.length === 0) {
+    return (
+      <View className="flex-1 items-center justify-center bg-white">
+        <Text>No units found. Please check your internet connection.</Text>
+      </View>
+    );
+  }
+  
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
