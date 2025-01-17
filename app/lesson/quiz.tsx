@@ -115,12 +115,12 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
     {/* Mascot Image */}
     <View className="flex-1 justify-center items-center -mb-16">
         <Image
-          source={require("@/assets/images/person-choosing-direction-illustration_24877-82864.png")}
+          source={require("@/assets/images/mascot.png")}
           style={{ width: 200, height: 200, alignSelf: "center" }}
           resizeMode="contain"
         />
       </View>
-      
+
       <View className="flex-1 justify-center items-center">
         <View className="w-4/5">
           <Text className="text-lg font-bold text-gray-800 mb-6">{challenge.question}</Text>
