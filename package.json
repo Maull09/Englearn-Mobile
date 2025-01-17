@@ -5,7 +5,7 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"expo start\"",
     "start-web": "concurrently \"npm run server\" \"expo start --web\"",
-    "build": "expo export:web && tsc",
+    "build": "expo export && tsc",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
