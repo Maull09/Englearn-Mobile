@@ -6,10 +6,13 @@
   },
   "build": {
     "development": {
-      "developmentClient": true,
+      "developmentClient": false,
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_DATABASE_URL": "postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+      },
+      "android": {
+        "buildType": "apk" 
       }
     },
     "preview": {
@@ -19,6 +22,7 @@
       }
     },
     "production": {
+      "distribution": "internal",
       "autoIncrement": true,
       "android": {
         "buildType": "apk" 
