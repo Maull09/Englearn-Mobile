@@ -59,7 +59,7 @@ const LearnPage = () => {
         }
 
         const profileResponse = await fetch(
-          `https://englearnuniversal.vercel.app/api/auth/profile/${userId}`,
+          `https://englearn-backend.up.railway.app/api/auth/profile/${userId}`,
           {
             method: "GET",
             headers: {
@@ -74,7 +74,7 @@ const LearnPage = () => {
         const profileData = await profileResponse.json();
         setUserProfile(profileData);
 
-        const unitsResponse = await fetch("https://englearnuniversal.vercel.app/api/units", {
+        const unitsResponse = await fetch("https://englearn-backend.up.railway.app/api/units", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const LearnPage = () => {
         setUnits(unitsData);
 
         const progressResponse = await fetch(
-          `https://englearnuniversal.vercel.app/api/progress/${userId}`,
+          `https://englearn-backend.up.railway.app/api/progress/${userId}`,
           {
             method: "GET",
             headers: {

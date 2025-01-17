@@ -37,11 +37,11 @@ const LessonPage = () => {
       }
 
       const [lessonResponse, progressResponse] = await Promise.all([
-        fetch(`https://englearnuniversal.vercel.app/api/lesson/${id}`, {
+        fetch(`https://englearn-backend.up.railway.app/api/lesson/${id}`, {
           method: "GET",
           headers: { "Content-Type": "application/json", "user-id": userId },
         }),
-        fetch(`https://englearnuniversal.vercel.app/api/progress/${userId}`, {
+        fetch(`https://englearn-backend.up.railway.app/api/progress/${userId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         }),

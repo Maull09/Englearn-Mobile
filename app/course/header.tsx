@@ -14,7 +14,7 @@ export const Header = ({ title, userName, profileImageSrc }: HeaderProps) => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://englearnuniversal.vercel.app/api/auth/logout", {
+      const response = await fetch("https://englearn-backend.up.railway.app/api/auth/logout", {
         method: "POST",
         credentials: "include", // Ensure cookies are cleared
       });

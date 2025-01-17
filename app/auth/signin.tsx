@@ -51,7 +51,7 @@ const LoginScreen = () => {
 
     try {
       // Send login request
-      const response = await fetch("https://englearnuniversal.vercel.app/api/auth/login", {
+      const response = await fetch("https://englearn-backend.up.railway.app/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
