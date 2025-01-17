@@ -1,4 +1,3 @@
-
 {
   "cli": {
     "version": ">= 13.4.2",
@@ -10,19 +9,22 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_DATABASE_URL": "postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require'"
+        "EXPO_PUBLIC_DATABASE_URL": "postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_DATABASE_URL": "postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require'"
+        "EXPO_PUBLIC_DATABASE_URL": "postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
       }
     },
     "production": {
       "autoIncrement": true,
+      "android": {
+        "buildType": "apk" 
+      },
       "env": {
-        "EXPO_PUBLIC_DATABASE_URL": "postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require'"
+        "EXPO_PUBLIC_DATABASE_URL": "postgresql://neondb_owner:ZTnXeIcCp58Y@ep-solitary-sky-a141hji8.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
       }
     }
   },

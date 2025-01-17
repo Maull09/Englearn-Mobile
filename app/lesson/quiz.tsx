@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Alert, Image } from "react-native";
+import { View, Text, TouchableOpacity, Alert, Image, Platform } from "react-native";
 import ConfettiCannon from "react-native-confetti-cannon";
 import { useRouter } from "expo-router";
 import { showAlert } from "@/utils/util";
@@ -113,13 +113,22 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
       </View>
     
     {/* Mascot Image */}
-    <View className="flex-1 justify-center items-center -mb-16">
-        <Image
-          source={require("@/assets/images/mascot.png")}
-          style={{ width: 50, height: 50, alignSelf: "center" }}
-          resizeMode="contain"
-        />
-      </View>
+    <View
+      className={`flex-1 justify-center items-center ${
+        Platform.OS === "web" ? "-mt-8" : "-mb-8"
+      }`}
+    >
+      <Image
+        source={require("@/assets/images/mascot.png")}
+        style={{
+          width: Platform.OS === "web" ? 150 : 200,
+          height: Platform.OS === "web" ? 150 : 200,
+          alignSelf: "center",
+        }}
+        resizeMode="contain"
+      />
+    </View>
+
 
       <View className="flex-1 justify-center items-center">
         <View className="w-4/5">
