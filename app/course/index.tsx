@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, ScrollView, Alert, ActivityIndicator } from "react-native";
+import { View, ScrollView, Alert, ActivityIndicator, Text } from "react-native";
 import { useRouter } from "expo-router";
 import { FeedWrapper } from "@/components/FeedWrapper";
 import { Header } from "./header";
 import Unit from "./unit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { showAlert, getCookie } from "@/utils/util";
-
 
 interface UserProfile {
   userName: string;
@@ -48,16 +47,24 @@ const LearnPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Retrieve user data
         const userDataString =
           (await AsyncStorage.getItem("userData")) || getCookie("userData");
-        const userData = userDataString ? JSON.parse(userDataString) : null;
+        if (!userDataString) {
+          Alert.alert("Error", "User data not found in storage.");
+          throw new Error("User data not found in storage.");
+        }
+        const userData = JSON.parse(userDataString);
         const userId = userData?.userId;
-        console.log("userId", userId);
 
         if (!userId) {
-          throw new Error("User is not logged in");
+          Alert.alert("Error", "User ID is missing. Redirecting to sign-in.");
+          throw new Error("User ID is missing");
         }
 
+        console.log("UserID:", userId);
+
+        // Fetch user profile
         const profileResponse = await fetch(
           `https://englearn-backend.up.railway.app/api/auth/profile/${userId}`,
           {
@@ -69,25 +76,34 @@ const LearnPage = () => {
         );
 
         if (!profileResponse.ok) {
+          Alert.alert("Error", "Failed to fetch user profile.");
           throw new Error("Failed to fetch user profile");
         }
         const profileData = await profileResponse.json();
+        console.log("UserProfile:", profileData);
         setUserProfile(profileData);
 
-        const unitsResponse = await fetch("https://englearn-backend.up.railway.app/api/units", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "user-id": userId,
-          },
-        });
+        // Fetch units
+        const unitsResponse = await fetch(
+          "https://englearn-backend.up.railway.app/api/units",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "user-id": userId,
+            },
+          }
+        );
 
         if (!unitsResponse.ok) {
+          Alert.alert("Error", "Failed to fetch units.");
           throw new Error("Failed to fetch units");
         }
         const unitsData = await unitsResponse.json();
+        console.log("Units:", unitsData);
         setUnits(unitsData);
 
+        // Fetch challenge progress
         const progressResponse = await fetch(
           `https://englearn-backend.up.railway.app/api/progress/${userId}`,
           {
@@ -99,13 +115,16 @@ const LearnPage = () => {
         );
 
         if (!progressResponse.ok) {
-          throw new Error("Failed to fetch user challenge progress");
+          Alert.alert("Error", "Failed to fetch user progress.");
+          throw new Error("Failed to fetch user progress");
         }
         const progressData = await progressResponse.json();
+        console.log("User Progress:", progressData);
         setUserChallengeProgress(progressData);
       } catch (error) {
-        console.error(error);
-        showAlert("Error", "Failed to load data. Please log in and try again.");
+        console.error("Error in fetchData:", error);
+        const errorMessage = error instanceof Error ? error.message : "Something went wrong.";
+        Alert.alert("Error", errorMessage);
         router.push("/auth/signin");
       } finally {
         setLoading(false);
@@ -119,13 +138,18 @@ const LearnPage = () => {
     return (
       <View className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading...</Text>
       </View>
     );
   }
 
   if (!userProfile) {
-    showAlert("User Profile Not Found", "Please set up your profile to continue.");
+    Alert.alert(
+      "User Profile Not Found",
+      "Please set up your profile to continue."
+    );
     router.push("/"); // Redirect to landing page
+    return null;
   }
 
   return (
