@@ -33,7 +33,7 @@ const markLessonComplete = async (lessonId: string): Promise<void> => {
         const userID = userCookie ? JSON.parse(userCookie).userId : null;
 
         const response: MarkLessonCompleteResponse = await fetch(
-            `http://localhost:3000/api/progress/${userID}/lesson/${lessonId}`,
+            `https://englearnuniversal.vercel.app/api/progress/${userID}/lesson/${lessonId}`,
             {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },

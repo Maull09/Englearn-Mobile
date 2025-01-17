@@ -16,13 +16,16 @@ const app = express();
 // Middleware setup
 app.use(bodyParser.json());
 
+// Set Proxy
+app.set("trust proxy", 1); 
+
 // Configure CORS
 app.use(
   cors({
-    origin: "http://localhost:8081", // Ubah ini jika Anda ingin membatasi akses ke domain tertentu
+    origin: "https://englearnuniversal.vercel.app", // Domain frontend Anda
     methods: "GET,POST,PUT,DELETE,OPTIONS",
-    allowedHeaders: "Content-Type,Authorization,user-id", 
-    credentials: true, // Izinkan pengiriman kredensial
+    allowedHeaders: "Content-Type,Authorization,user-id",
+    credentials: true, // Allow credentials (cookies)
   })
 );
 
@@ -42,8 +45,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// // Start the server
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on http://localhost:${PORT}`);
+// });
+
+module.exports = app;

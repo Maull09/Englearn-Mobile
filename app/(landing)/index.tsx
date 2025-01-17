@@ -19,10 +19,10 @@ export default function LandingPage() {
   const checkLoginStatus = async () => {
     try {
       let userData = null;
-      const userDataString = (await AsyncStorage.getItem("userData")) || getCookie("userData");      
-
+      
       if (Platform.OS === "web") {
         // Periksa cookies untuk web
+        const userDataString = getCookie("userData");      
         console.log("cookieData", userDataString);
         if (userDataString) {
           userData = JSON.parse(userDataString);
@@ -67,7 +67,7 @@ export default function LandingPage() {
       showsVerticalScrollIndicator={false}
     >
       {/* Section 1 */}
-    <View className="items-center mt-4 md:mt-0 mb-12 w-full max-w-md px-4">
+    <View className="items-center mt-4 -mb-48 md:mt-0 md:mb-36 w-full max-w-md px-4">
       <Image
         source={require("../../assets/images/undraw_Educator_re_ju47.png")}
         className="w-3/5 md:w-4/5 max-h-32 md:max-h-40 mb-4"
@@ -109,7 +109,7 @@ export default function LandingPage() {
 
 
       {/* Section 2 */}
-      <View className="items-center -mt-36 md:mt-0 -mb-96 md:mb-48 w-full max-w-md">
+      <View className="items-center -mt-96 md:mt-0 -mb-96 md:mb-48 w-full max-w-md">
         <Image
           source={require("../../assets/images/undraw_Mobile_interface_re_1vv9.png")}
           className="w-3/5 md:w-4/5 max-h-32 md:max-h-40 mb-2"
@@ -140,6 +140,10 @@ export default function LandingPage() {
           mendengarkan, dan berbicara dalam Bahasa Inggris!
         </Text>
       </View>
+
+      {/* Ghost Section */}
+      <View className="h-96 -mt-96 -mb-96 md:-mt-48 md:-mb-48" />
+
     </ScrollView>
   );
 }

@@ -29,7 +29,7 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
   const markLessonComplete = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/progress/${userId}/lesson/${lesson.id}`,
+        `https://englearnuniversal.vercel.app/api/progress/${userId}/lesson/${lesson.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

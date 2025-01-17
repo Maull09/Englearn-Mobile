@@ -59,7 +59,7 @@ const LearnPage = () => {
         }
 
         const profileResponse = await fetch(
-          `http://localhost:3000/api/auth/profile/${userId}`,
+          `https://englearnuniversal.vercel.app/api/auth/profile/${userId}`,
           {
             method: "GET",
             headers: {
@@ -74,7 +74,7 @@ const LearnPage = () => {
         const profileData = await profileResponse.json();
         setUserProfile(profileData);
 
-        const unitsResponse = await fetch("http://localhost:3000/api/units", {
+        const unitsResponse = await fetch("https://englearnuniversal.vercel.app/api/units", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const LearnPage = () => {
         setUnits(unitsData);
 
         const progressResponse = await fetch(
-          `http://localhost:3000/api/progress/${userId}`,
+          `https://englearnuniversal.vercel.app/api/progress/${userId}`,
           {
             method: "GET",
             headers: {
@@ -132,6 +132,7 @@ const LearnPage = () => {
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
       className="flex-1 bg-white px-4"
+      showsVerticalScrollIndicator={false}
     >
       <FeedWrapper>
         {userProfile && (

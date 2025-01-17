@@ -18,17 +18,22 @@ const SignUpScreen = () => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const userData = (await AsyncStorage.getItem("userData")) || getCookie("userData");      
-
+        
         if (Platform.OS === "web") {
-          if (userData) {
+          const userData = (await AsyncStorage.getItem("userData")) || getCookie("userData") || "{}";   
+          const userDataParse = JSON.parse(userData);   
+          if (userDataParse.userId) {
             setIsLoggedIn(true);
           }
         } else {
           const storageData = await AsyncStorage.getItem("userData");
             if (storageData) {
               const userDataParse = JSON.parse(storageData);
-            }        }
+              if (userDataParse.userId) {
+                setIsLoggedIn(true);
+            }        
+          }
+        }
       } catch (error) {
         console.error("Error checking login status:", error);
       }
@@ -57,7 +62,7 @@ const SignUpScreen = () => {
 
     try {
       // Kirim permintaan pendaftaran ke backend
-      const response = await fetch("http://localhost:3000/api/auth/register", {
+      const response = await fetch("https://englearnuniversal.vercel.app/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

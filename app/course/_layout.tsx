@@ -18,7 +18,6 @@ const MainLayout = () => (
       </View>
 
       {/* Footer (BottomBar) */}
-      <BottomBar />
     </View>
   </View>
 );

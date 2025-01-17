@@ -13,9 +13,9 @@ const LoginScreen = () => {
 
   const checkIfLoggedIn = async () => {
     try {
-      const userCookie = (await AsyncStorage.getItem("userData")) || getCookie("userData");      
-
+      
       if (Platform.OS === "web") {
+        const userCookie =  getCookie("userData");      
         // Check for cookies
         if (userCookie) {
           showAlert("Info", "Anda sudah login.");
@@ -51,7 +51,7 @@ const LoginScreen = () => {
 
     try {
       // Send login request
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await fetch("https://englearnuniversal.vercel.app/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

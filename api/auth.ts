@@ -100,9 +100,10 @@ router.post("/login", async (req: Request, res: Response) => {
       // Set cookie for web clients
       res.cookie("userData", JSON.stringify(userData), {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Secure only in production
-        sameSite: "lax", // Protect against CSRF
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        domain: process.env.NODE_ENV === "production" ? "englearnuniversal.vercel.app" : "localhost",
+        maxAge: 24 * 60 * 60 * 1000,
       });
       res.status(200).json({ message: "Login successful", user: userData });
       return;
@@ -117,10 +118,16 @@ router.post("/login", async (req: Request, res: Response) => {
 });
 
 // Logout a user
-router.post("/logout", (req: Request, res: Response) => {
-  res.clearCookie("authToken");
+router.post("/logout", (req, res) => {
+  res.clearCookie("userData", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    domain: process.env.NODE_ENV === "production" ? "englearnuniversal.vercel.app" : "localhost",
+  });
   res.status(200).json({ message: "Logged out successfully" });
 });
+
 
 // Fetch user profile by ID
 router.get("/profile/:id", async (req: Request, res: Response) => {
