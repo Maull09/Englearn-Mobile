@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, Text, Image, TouchableOpacity, Alert, Platform } from "react-native";
 import { useRouter } from "expo-router";
+import { showAlert } from "@/utils/util";
 
 type HeaderProps = {
   title: string;
@@ -23,11 +25,22 @@ export const Header = ({ title, userName, profileImageSrc }: HeaderProps) => {
         throw new Error("Failed to logout.");
       }
 
-      Alert.alert("Success", "You have been logged out.");
+      if (Platform.OS === "web") {
+        document.cookie = "userData=; path=/; max-age=0"; // Overwrite cookie with an empty value and expire immediately
+      } else {
+        // Clear user data stored in AsyncStorage (for mobile)
+        AsyncStorage.removeItem("userData")
+          .then(() => {
+            console.log("User data cleared from AsyncStorage");
+          })
+          .catch((err) => console.error("Error clearing user data:", err));
+      }
+
+      showAlert("Success", "You have been logged out.");
       router.push("/"); // Redirect to login page
     } catch (error) {
       console.error("Error logging out:", error);
-      Alert.alert("Error", "Failed to logout. Please try again.");
+      showAlert("Error", "Failed to logout. Please try again.");
     }
   };
 
