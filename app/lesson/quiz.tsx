@@ -116,7 +116,7 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
     <View className="flex-1 justify-center items-center -mb-16">
         <Image
           source={require("@/assets/images/mascot.png")}
-          style={{ width: 200, height: 200, alignSelf: "center" }}
+          style={{ width: 50, height: 50, alignSelf: "center" }}
           resizeMode="contain"
         />
       </View>
