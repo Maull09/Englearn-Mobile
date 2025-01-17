@@ -36,7 +36,6 @@ export const Header = ({ title, userName, profileImageSrc }: HeaderProps) => {
           .catch((err) => console.error("Error clearing user data:", err));
       }
 
-      showAlert("Success", "You have been logged out.");
       router.push("/"); // Redirect to login page
     } catch (error) {
       console.error("Error logging out:", error);

@@ -12,7 +12,7 @@ type QuizProps = {
     challenges: {
       id: number;
       question: string;
-      challengeOptions: { id: number; text: string }[];
+      challengeOptions: { id: number; text: string; correct: boolean }[]; // Added "correct" property
       completed: boolean;
     }[];
   };
@@ -48,11 +48,9 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
         throw new Error("Failed to mark lesson as complete.");
       }
 
-      showAlert("Lesson Completed", "Great job! You've completed the lesson.");
       setShowConfetti(true);
     } catch (error) {
       console.error("Error marking lesson as complete:", error);
-      showAlert("Error", "Could not mark the lesson as complete.");
     }
   };
 
@@ -64,11 +62,23 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
   };
 
   const onNextChallenge = () => {
-    if (activeIndex < lesson.challenges.length - 1) {
-      setActiveIndex((prev) => prev + 1);
-      setSelectedOption(undefined);
+    if (selectedOption === undefined) {
+      showAlert("Error", "Please select an option before proceeding.");
+      return;
+    }
+
+    const selected = options.find((option) => option.id === selectedOption);
+    if (selected?.correct) {
+      // Move to the next question if the answer is correct
+      if (activeIndex < lesson.challenges.length - 1) {
+        setActiveIndex((prev) => prev + 1);
+        setSelectedOption(undefined);
+      } else {
+        onCompleteLesson();
+      }
     } else {
-      onCompleteLesson();
+      // Show error and do not proceed to the next question
+      showAlert("Incorrect Answer", "Please try again.");
     }
   };
 
@@ -101,7 +111,16 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
       <View className="p-6">
         <Text className="text-lg font-bold text-gray-700 text-center">{lesson.title}</Text>
       </View>
-
+    
+    {/* Mascot Image */}
+    <View className="flex-1 justify-center items-center -mb-16">
+        <Image
+          source={require("@/assets/images/person-choosing-direction-illustration_24877-82864.png")}
+          style={{ width: 200, height: 200, alignSelf: "center" }}
+          resizeMode="contain"
+        />
+      </View>
+      
       <View className="flex-1 justify-center items-center">
         <View className="w-4/5">
           <Text className="text-lg font-bold text-gray-800 mb-6">{challenge.question}</Text>
@@ -122,7 +141,6 @@ export const Quiz = ({ lesson, userId, isLessonCompleted }: QuizProps) => {
       <View className="p-6">
         <TouchableOpacity
           onPress={onNextChallenge}
-          disabled={selectedOption === undefined}
           className={`py-3 rounded-full ${
             selectedOption !== undefined ? "bg-blue-500" : "bg-gray-300"
           }`}

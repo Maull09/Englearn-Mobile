@@ -45,14 +45,12 @@ const markLessonComplete = async (lessonId: string): Promise<void> => {
             throw new Error("Failed to update lesson progress");
         }
 
-        showAlert("Success", "Lesson marked as complete!");
         setShowConfetti(true);
         setTimeout(() => {
             router.push("/course");
         }, 3000);
     } catch (error) {
         console.error("Error marking lesson as complete:", error);
-        showAlert("Error", "Failed to mark lesson as complete.");
     }
 };
 

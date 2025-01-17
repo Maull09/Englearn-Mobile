@@ -71,12 +71,10 @@ const LoginScreen = () => {
       if (Platform.OS === "web") {
         // Cookies are handled automatically on the web
         document.cookie = `userData=${JSON.stringify(data.user)}; path=/; max-age=${24 * 60 * 60}`;
-        showAlert("Login Berhasil", `Selamat datang, ${data.user?.userName || "User"}!`);
         router.push("../course");
       } else {
         // Store user data in AsyncStorage for mobile
         await AsyncStorage.setItem("userData", JSON.stringify(data.user));
-        showAlert("Login Berhasil", `Selamat datang, ${data.user?.userName || "User"}!`);
         router.push("../course");
       }
     } catch (error) {
