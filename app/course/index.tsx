@@ -149,7 +149,7 @@ const LearnPage = () => {
       "Please set up your profile to continue."
     );
     router.push("/"); // Redirect to landing page
-    return null;
+    return;
   }
 
   if (units.length === 0) {
